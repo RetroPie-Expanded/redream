@@ -105,8 +105,8 @@ ifneq (,$(findstring unix,$(platform)))
    else
       GL_LIB := -lGL
    endif
-
-   # Raspberry Pi
+   
+  # Raspberry Pi
    ifneq (,$(findstring rpi,$(platform)))
       GLES = 1
       GL_LIB := -L/opt/vc/lib -lGLESv2
@@ -252,7 +252,14 @@ else ifneq (,$(findstring theos_ios,$(platform)))
    CPUFLAGS += -DNO_ASM  -DARM -D__arm__ -DARM_ASM -D__NEON_OPT -DNOSSE
    HAVE_NEON=1
 
-
+# Tinker Board
+else ifneq (,$(findstring tinker,$(platform)))
+    MFLAGS += -marm -mfloat-abi=hard -march=armv7-a -mtune=cortex-a17 -mfpu=neon-vfpv4 -mfloat-abi=hard
+    ASFLAGS += -marm -mfloat-abi=hard -march=armv7-a -mtune=cortex-a17 -mfpu=neon-vfpv4 -mfloat-abi=hard
+    CFLAGS += -D GL_GLEXT_PROTOTYPES -D TARGET_BEAGLE -D TARGET_LINUX_ARMELv7 -DARM_HARDFP -fsingle-precision-constant -funsafe-math-optimizations
+    USE_GLES := 1
+    USE_SDL := 1
+  
 # Android
 else ifneq (,$(findstring android,$(platform)))
    fpic = -fPIC
